@@ -10,21 +10,16 @@ GuidanceMatrix = dict[str, Any]
 
 class Temp(Enum):
     """
-    Temperature determines how restrictive the matrix will be for training. Lower temperature
-    means that more parameters will be restricted in training. Higher temperature means that more
-    parameters are allowed to be trained.
+    Temperature determines how restrictive the matrix will be for training. Lower temperature means that more parameters will be restricted in training. Higher temperature means that more parameters are allowed to be trained.
 
-    There are six levels of temperature that can be selected staring from the coldest "freezing"
-    and ending with the warmest "evaporating":
+    There are six levels of temperature that can be selected staring from the coldest "freezing" and ending with the warmest "evaporating":
 
     "freezing" - Only top 1% of parameters with the highest guidance values are allowed to change.
-    "icy" - Only the raw guidance values above the mean are allowed to change. Their values scale between 0.0 and
-        maximum.
-    "chilly" - All guidance values are scaled between zero and maximum. This is a different way to enforce zero.
+    "icy" - Only the raw guidance values above the mean are allowed to change. Their values scale between 0.0 and maximum.
+    "chilly" - All guidance values are scaled between zero and maximum. This is a different way to enforce zero. 
     "room" (temperature) - If room temperature is selected, parameter values are not changed. This is the default.
     "warm" - More freedom is given for parameter changes. The guiding values begin with the mean of the guidance values.
-    "evaporating" - This is the least restricted form of guidance. Guiding matrix only lightly touches the learning
-        process. The guiding begin with the fourth quantile of the guiding matrix.
+    "evaporating" - This is the least restricted form of guidance. Guiding matrix only lightly touches the learning process. The guiding begin with the fourth quantile of the guiding matrix.
     """
 
     FREEZING = "freezing"
