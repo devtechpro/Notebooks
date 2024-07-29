@@ -21,15 +21,15 @@ def list_params(model: torch.nn.Module) -> List[tuple[str, torch.Size]]:
         model (torch.nn.Module): The PyTorch model for which to list the parameters.
 
     Returns:
-        List[tuple[str, torch.Size]]): A list of tuples containing the parameter name and its size.
+        List[tuple[str, torch.Size]] ): A list of tuples containing the parameter name and its size.
 
     Examples:
         >>> model = MyModel()
         >>> print(list_params(model))
         [('weight', torch.Size([64, 3, 5, 5])), ('bias', torch.Size([64]))]
     """
-    state_dict = model.state_dict()
-    return [(param_name, state_dict[param_name].size()) for param_name in state_dict]
+    state_dict = model.state_dict() 
+    return [(param_name, state_dict[param_name].size()) for param_name in state_dict] 
 
 
 def get_param_values(model: torch.nn.Module, first_n: int = 5):
@@ -47,9 +47,7 @@ def get_param_values(model: torch.nn.Module, first_n: int = 5):
     return [param[:first_n] for name, param in model.named_parameters()]
 
 
-def create_scout_data_from_ranged_indexes(
-    indexes: List[List[int]], features_or_labels: torch.Tensor
-) -> List[torch.Tensor]:
+def create_scout_data_from_ranged_indexes(indexes: List[List[int]], features_or_labels: torch.Tensor) -> List[torch.Tensor]:
     """Creates scout data from ranged indexes.
 
     Args:
@@ -62,9 +60,7 @@ def create_scout_data_from_ranged_indexes(
     return _create_scout_data(expand_scout_indexes(indexes), features_or_labels)
 
 
-def get_guidance_values(
-    guidance_matrix: GuidanceMatrix, first_n=2
-) -> dict[str, torch.Tensor]:
+def get_guidance_values(guidance_matrix: GuidanceMatrix, first_n=2) -> dict[str, torch.Tensor]:
     """Return a dictionary containing the keys and the first 'first_n' values from the guidance matrix.
 
     Args:
@@ -103,9 +99,7 @@ def apply_guidance(model: torch.nn.Module, guidance_matrix: GuidanceMatrix) -> N
             param.grad *= guidance_matrix[name]
 
 
-def plot_guidance_distribution(
-    guidance_matrix: GuidanceMatrix, name: str = None
-) -> None:
+def plot_guidance_distribution(guidance_matrix: GuidanceMatrix, name: str = None) -> None:
     """
     Plots the guidance data from the guide matrix.
 
@@ -177,21 +171,11 @@ def c(number: int) -> list[int]:
     return [number]
 
 
-def create_scouts(
-    model: torch.nn.Module,
-    path: str = MODELS_DIR,
-    should_save_guidance: bool = True,
-    should_save_scouts: bool = False,
-    use_squared_differences: bool = True,
-) -> Scouts:
-    return Scouts(
-        model, path, should_save_guidance, should_save_scouts, use_squared_differences
-    )
+def create_scouts(model: torch.nn.Module,path: str = MODELS_DIR,should_save_guidance: bool = True,should_save_scouts: bool = False,use_squared_differences: bool = True,) -> Scouts:
+    return Scouts(model, path, should_save_guidance, should_save_scouts, use_squared_differences )
 
 
-def expand_scout_indexes(
-    indexes: List[List[int] | List[List[int]]],
-) -> List[List[int]]:
+def expand_scout_indexes(indexes: List[List[int] | List[List[int]]],) -> List[List[int]]:
     """Expands each scout index into a list of individual index values within the provided range.
 
     Args:
@@ -224,9 +208,7 @@ def expand_scout_indexes(
     return scout_indexes
 
 
-def _create_scout_data(
-    scout_indexes: List[List[int]], features_or_labels: torch.Tensor
-) -> List[torch.Tensor]:
+def _create_scout_data(scout_indexes: List[List[int]], features_or_labels: torch.Tensor) -> List[torch.Tensor]:
     """Create scout data by stacking selected data elements based on scout indexes.
 
     Args:

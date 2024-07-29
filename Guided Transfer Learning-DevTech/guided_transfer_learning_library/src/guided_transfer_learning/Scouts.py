@@ -8,16 +8,8 @@ SCOUT_FILE_PREFIX = "gtl_scout"
 DEFAULT_RAW_GUIDANCE_PATH = "raw_guidance_matrix.pt"
 DEFAULT_MODEL_DIR = "."
 
-
 class Scouts:
-    def __init__(
-        self,
-        base_model,
-        path=DEFAULT_MODEL_DIR,
-        should_save_guidance=True,
-        should_save_scouts=False,
-        use_squared_differences=True,
-    ):
+    def __init__(self,base_model,path=DEFAULT_MODEL_DIR,should_save_guidance=True,should_save_scouts=False,use_squared_differences=True,):
         self.path = Path(path) if path else Path.cwd()
         self.should_save_guidance = should_save_guidance
         self.should_save_scouts = should_save_scouts
@@ -39,18 +31,14 @@ class Scouts:
             self.__sum[layer] += self.__calculate_update_value(difference)
         self.__scout_count += 1
 
-    def create_raw_guidance(
-        self, device=None, path=DEFAULT_MODEL_DIR
-    ) -> GuidanceMatrix:
+    def create_raw_guidance(self, device=None, path=DEFAULT_MODEL_DIR) -> GuidanceMatrix:
         for layer in self.__sum:
             # self.__sum[layer] /= self.__scout_count
             self.__sum[layer] = self.__sum[layer].float() / self.__scout_count
         if self.should_save_guidance:
             path = Path(path) if path else self.path
             torch.save(self.__sum, path / DEFAULT_RAW_GUIDANCE_PATH)
-        return (
-            {k: self.__sum[k].to(device) for k in self.__sum} if device else self.__sum
-        )
+        return ( {k: self.__sum[k].to(device) for k in self.__sum} if device else self.__sum )
 
     def __calculate_update_value(self, difference):
         if self.use_squared_differences:
