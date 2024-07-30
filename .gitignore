@@ -2,3 +2,6 @@
 guidance_matrix.pt
 Testing.ipynb
 raw_guidance_matrix.pt
+raw_guidance_matrix(reference).pt
+wandb/.
+wandb
