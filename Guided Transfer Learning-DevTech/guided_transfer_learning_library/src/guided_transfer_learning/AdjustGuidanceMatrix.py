@@ -10,16 +10,21 @@ GuidanceMatrix = dict[str, Any]
 
 class Temp(Enum):
     """
-    Temperature determines how restrictive the matrix will be for training. Lower temperature means that more parameters will be restricted in training. Higher temperature means that more parameters are allowed to be trained.
+    Temperature determines how restrictive the matrix will be for training. Lower temperature
+    means that more parameters will be restricted in training. Higher temperature means that more
+    parameters are allowed to be trained.
 
-    There are six levels of temperature that can be selected staring from the coldest "freezing" and ending with the warmest "evaporating":
+    There are six levels of temperature that can be selected staring from the coldest "freezing"
+    and ending with the warmest "evaporating":
 
     "freezing" - Only top 1% of parameters with the highest guidance values are allowed to change.
-    "icy" - Only the raw guidance values above the mean are allowed to change. Their values scale between 0.0 and maximum.
-    "chilly" - All guidance values are scaled between zero and maximum. This is a different way to enforce zero. 
+    "icy" - Only the raw guidance values above the mean are allowed to change. Their values scale between 0.0 and
+        maximum.
+    "chilly" - All guidance values are scaled between zero and maximum. This is a different way to enforce zero.
     "room" (temperature) - If room temperature is selected, parameter values are not changed. This is the default.
     "warm" - More freedom is given for parameter changes. The guiding values begin with the mean of the guidance values.
-    "evaporating" - This is the least restricted form of guidance. Guiding matrix only lightly touches the learning process. The guiding begin with the fourth quantile of the guiding matrix.
+    "evaporating" - This is the least restricted form of guidance. Guiding matrix only lightly touches the learning
+        process. The guiding begin with the fourth quantile of the guiding matrix.
     """
 
     FREEZING = "freezing"
@@ -30,9 +35,8 @@ class Temp(Enum):
     WARM = "warm"
     EVAPORATING = "evaporating"
 
-
 class Focus(Enum):
-    """ The focus determines how the guidance matrix will be adjusted. There are four types of focus:
+    """The focus determines how the guidance matrix will be adjusted. There are four types of focus:
 
     "raw" - The guidance matrix will not be adjusted.
     "zero_enforced" - The guidance matrix will be adjusted to enforce zero.
@@ -65,8 +69,15 @@ class AdjustGuidanceMatrix:
     ```
     """
 
-    def __init__(self,guidance_matrix: GuidanceMatrix,focus: Focus | str = Focus.ZERO_ENFORCED_AND_NORMALIZED,temperature:  |  = Temp.ROOM,slope: float = None,intercept: float = None,should_save_guidance: bool = False,):
-        
+    def __init__(
+        self,
+        guidance_matrix: GuidanceMatrix,
+        focus: Focus | str = Focus.ZERO_ENFORCED_AND_NORMALIZED,
+        temperature: Temp | str = Temp.ROOM,
+        slope: float = None,
+        intercept: float = None,
+        should_save_guidance: bool = False,
+    ):
         self.guidance_matrix = guidance_matrix
         self.focus = self.__interpret_enum(Focus, focus)
         self.temperature = self.__interpret_enum(Temp, temperature)
@@ -90,7 +101,9 @@ class AdjustGuidanceMatrix:
         }
 
     @staticmethod
-    def __interpret_enum(enum_class: Focus | Temp, enum_key: str | Focus | Temp) -> Focus | Temp:
+    def __interpret_enum(
+        enum_class: Focus | Temp, enum_key: str | Focus | Temp
+    ) -> Focus | Temp:
         if isinstance(enum_key, str):
             try:
                 return enum_class[enum_key.upper()]
@@ -109,7 +122,9 @@ class AdjustGuidanceMatrix:
             None
         """
         threshold = self.percentile(self.guidance_matrix[layer], 99)
-        self.guidance_matrix[layer] = torch.where(self.guidance_matrix[layer] < threshold, 0.0, 1.0 )
+        self.guidance_matrix[layer] = torch.where(
+            self.guidance_matrix[layer] < threshold, 0.0, 1.0
+        )
 
     def adjust_temperature_icy(self, layer: str) -> None:
         """Only the raw guidance values above the mean are allowed to change. Their values scale between 0.0 and
@@ -122,8 +137,13 @@ class AdjustGuidanceMatrix:
             None
         """
         slope = 1
-        intercept = ( torch.amax(self.guidance_matrix[layer])- torch.amin(self.guidance_matrix[layer]) ) / 2 
-        self.guidance_matrix[layer] = (self.guidance_matrix[layer] * slope - intercept) * 2
+        intercept = (
+            torch.amax(self.guidance_matrix[layer])
+            - torch.amin(self.guidance_matrix[layer])
+        ) / 2
+        self.guidance_matrix[layer] = (
+            self.guidance_matrix[layer] * slope - intercept
+        ) * 2
 
     def adjust_temperature_chilly(self, layer: str) -> None:
         """All guidance values are scaled between zero and maximum. This is a different way to enforce zero.
@@ -160,7 +180,13 @@ class AdjustGuidanceMatrix:
             None
         """
         slope = 0.5
-        intercept = (-(torch.amax(self.guidance_matrix[layer])- torch.amin(self.guidance_matrix[layer]))/ 2)
+        intercept = (
+            -(
+                torch.amax(self.guidance_matrix[layer])
+                - torch.amin(self.guidance_matrix[layer])
+            )
+            / 2
+        )
         self.guidance_matrix[layer] = self.guidance_matrix[layer] * slope - intercept
 
     def adjust_temperature_evaporating(self, layer: str) -> None:
@@ -175,7 +201,10 @@ class AdjustGuidanceMatrix:
             None
         """
         slope = 0.25
-        intercept = -(torch.amax(self.guidance_matrix[layer])- torch.amin(self.guidance_matrix[layer]))
+        intercept = -(
+            torch.amax(self.guidance_matrix[layer])
+            - torch.amin(self.guidance_matrix[layer])
+        )
         self.guidance_matrix[layer] = self.guidance_matrix[layer] * slope - intercept
 
     def apply_temperature(self) -> None:
