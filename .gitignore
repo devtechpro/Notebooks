@@ -5,3 +5,5 @@ raw_guidance_matrix.pt
 raw_guidance_matrix(reference).pt
 wandb/.
 wandb
+Guided Transfer Learning-DevTech/guided_transfer_learning_library/src/guided_transfer_learning/__pycache__/AdjustGuidanceMatrix.cpython-311.pyc
+Guided Transfer Learning-DevTech/guided_transfer_learning_library/raw_guidance_matrix(reference) copy.pt
