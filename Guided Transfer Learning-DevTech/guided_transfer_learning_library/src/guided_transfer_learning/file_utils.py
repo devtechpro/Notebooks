@@ -21,9 +21,7 @@ def load_base(model: torch.nn.Module, path: str = "", name: str = ""):
     return state_dict
 
 
-def save_guidance_matrix(
-    guidance_matrix: torch.nn.Module, path: str = "", name: str = ""
-) -> Path:
+def save_guidance_matrix(guidance_matrix: torch.nn.Module, path: str = "", name: str = "") -> Path:
     path = _get_file_path(path, name, DEFAULT_GUIDANCE_MATRIX_NAME)
     torch.save(guidance_matrix, path)
     return path
