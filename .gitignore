@@ -9,3 +9,5 @@ Guided Transfer Learning-DevTech/guided_transfer_learning_library/src/guided_tra
 Guided Transfer Learning-DevTech/guided_transfer_learning_library/raw_guidance_matrix(reference) copy.pt
 Guided Transfer Learning-DevTech/guided_transfer_learning_library/gtl_base_model.pt
 Guided Transfer Learning-DevTech/guided_transfer_learning_library/raw_guidance_matrix_2unfrozenlayers.pt
+Guided Transfer Learning-DevTech/guided_transfer_learning_library/raw_guidance_matrix_3unfrozenlayers.pt
+Guided Transfer Learning-DevTech/guided_transfer_learning_library/raw_guidance_matrix_3unfrozenlayers(reference).pt
