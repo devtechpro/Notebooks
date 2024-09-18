@@ -37,12 +37,16 @@ python prepare_hf_dataset.py --dataset_path /fsx/datasets/c4/en/hf \
     --val_split_percentage 20
 """
 
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset_name", type=str, default=None)
 parser.add_argument("--dataset_config_name", type=str, default=None)
 parser.add_argument("--dataset_path", type=str, default=None)
 parser.add_argument("--val_split_percentage", type=int, default=20)
-parser.add_argument("--hf_tokenizer_name", type=str, default="meta-llama/Llama-2-7b-hf")
+
+# parser.add_argument("--hf_tokenizer_name", type=str, default="meta-llama/Llama-2-7b-hf")
+parser.add_argument("--hf_tokenizer_name", type=str, default="meta-llama/Meta-Llama-3-8B")
+
 parser.add_argument("--output_dir", default=None, type=str)
 parser.add_argument("--num_proc", default=64, type=int)
 parser.add_argument("--seq_len", type=int, default=4096)
